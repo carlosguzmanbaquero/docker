@@ -1,0 +1,130 @@
+usermod -aG docker cguzman
+
+//iniciar docker
+systemctl start docker
+
+//crear docker
+docker run hello-world
+
+//listar docker
+docker ps -a
+
+//inspeccionar docker
+docker inspect id_docker
+
+//renombrar docker
+docker rename name_docker new_name
+
+//filtrar por contenido del docker
+docker inspect -f '{ json .Config.Env{}' } 9e28ce74519b
+
+//crear docker con nombre
+docker run --name hola-mundo hello-world
+
+//borrar contenedor
+docker rm name_docker
+
+//listar solo los ids de los docker
+docker ps -aq
+
+//borrar todos los docker por id
+docker rm -f $(docker ps -aq)
+
+//crear docker ubuntu 
+docker run ubuntu
+
+//crear docker de nginx
+docker run -d --name server nginx
+
+//bajar el docker
+docker rm -f server
+
+//crear docker de nginx publicando el puerto
+docker run -d --name server -p 8081:80 nginx
+
+//crear docker de mongo db
+docker run -d --name db mongo
+
+//ingresar al docker
+docker exec -it db bash
+mongo
+use esquemaBD
+db.users.insert({"name":"carlos"})
+db.users.find()
+
+//crear docker con directorio local
+docker run --name db -d -v /home/cguzman/mongdata:/data/db mongo
+docker rm -f db
+
+//listar volumenes
+docker volume ls
+
+//borrar volumenes
+docker volume prune
+
+//crear volumen
+docker volume create dbdata
+
+//crear docker con volume
+docker run --name db -d --mount src=dbdata,dst=/data/db mongo
+
+//crear una imagen de docker
+docker build -t ubuntu:version_cguzman .
+
+//correr docker 
+docker run -it ubuntu:version_cguzman
+
+//listar imagenes de docker
+docker image ls
+
+//ver la historia de un docker
+docker history nombre del docker
+
+//corre docker y al terminar su ejecucion lo elimina
+docker run --rm -p 3000:3000 -v path:/usr/src nombre_imagen
+
+//crear docker con una app 
+docker build -t nodeapp .
+docker run --rm -p 3000:3000 -v /home/cguzman/Documentos/desarrollo/workspaces/docker/proyecto_node:/usr/src nodeapp
+
+//ver redes de docker
+docker network ls
+
+//crear red en docker
+docker network create --attachable nombre_red
+
+//conectar un contenedor a la red
+docker network connect nombre_red nombre_contenedor
+
+//inspeccionar una red
+docker network inspect nombre_red
+
+//crear docker con variables de entorno
+docker run -d --name app -p 3000:3000 --env MONGO_URL=mongodb://db:27017/test nodeapp
+
+//eliminar red
+docker network rm nombre_red
+
+//ejecutar docker compose
+docker-compose up -d
+
+//ingregar a un contenedor desde docker compose
+docker-compose exec app bash
+
+//eliminar servicios
+docker-compose down
+
+//ver logs
+docker-compose logs -f app
+
+//escalar un docker
+docker-compose scale app=3
+
+//realizar docker build con docker file no en la raiz
+docker build -t nodeapp -f build/development.Dockerfile .
+
+//montar un docker de docker montandole el socket de docker
+docker run -it --rm -v /var/run/docker.sock:/var/run/docker.sock docker:18.06.1-ce
+
+
+
